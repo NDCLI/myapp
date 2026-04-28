@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
-import heroApp from './assets/hero-app.png';
+import chamcongSS from './assets/chamcong-ss.png';
+import annotationsSS from './assets/annotations-ss.png';
+import imageviewSS from './assets/imageview-ss.png';
+import colorpickerSS from './assets/colorpicker-ss.png';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -139,13 +142,34 @@ function App() {
                       </div>
                       <div className="mx-auto w-48 h-4 bg-white/5 rounded-full" />
                     </div>
-                    <div className="flex-1 overflow-hidden relative">
-                      <img 
-                        src={heroApp} 
-                        alt="Chấm Công Application" 
-                        className="w-full h-full object-cover object-top transform transition-transform duration-1000 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/40 via-transparent to-transparent" />
+                    <div className="flex-1 overflow-hidden relative p-1 bg-[#020617]">
+                      <div className="grid grid-cols-2 gap-1 h-full">
+                        <div className="relative overflow-hidden rounded-lg group/img">
+                          <img src={chamcongSS} alt="Chấm Công" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
+                          <div className="absolute inset-0 bg-blue-500/10 flex items-end p-2">
+                            <span className="text-[8px] font-bold text-white bg-blue-600 px-1.5 py-0.5 rounded shadow-lg">Chấm Công</span>
+                          </div>
+                        </div>
+                        <div className="relative overflow-hidden rounded-lg group/img">
+                          <img src={annotationsSS} alt="Annotations" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
+                          <div className="absolute inset-0 bg-purple-500/10 flex items-end p-2">
+                            <span className="text-[8px] font-bold text-white bg-purple-600 px-1.5 py-0.5 rounded shadow-lg">Counter</span>
+                          </div>
+                        </div>
+                        <div className="relative overflow-hidden rounded-lg group/img">
+                          <img src={imageviewSS} alt="Image Viewer" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
+                          <div className="absolute inset-0 bg-emerald-500/10 flex items-end p-2">
+                            <span className="text-[8px] font-bold text-white bg-emerald-600 px-1.5 py-0.5 rounded shadow-lg">Viewer</span>
+                          </div>
+                        </div>
+                        <div className="relative overflow-hidden rounded-lg group/img">
+                          <img src={colorpickerSS} alt="Color Picker" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
+                          <div className="absolute inset-0 bg-pink-500/10 flex items-end p-2">
+                            <span className="text-[8px] font-bold text-white bg-pink-600 px-1.5 py-0.5 rounded shadow-lg">Color AI</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/40 via-transparent to-transparent pointer-events-none" />
                     </div>
                   </div>
                   
