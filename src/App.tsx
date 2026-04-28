@@ -151,7 +151,7 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {apps.map((app, index) => (
-              <div 
+              <div
                 key={index}
                 onClick={() => window.open(app.url, '_blank')}
                 className={cn(
@@ -161,14 +161,14 @@ function App() {
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", app.color)} />
-                
+
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-8">
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500">
                       {app.icon}
                     </div>
                     <div className="flex gap-2">
-                      <a 
+                      <a
                         href={`#guide-${index}`}
                         onClick={(e) => e.stopPropagation()}
                         className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-blue-500/20 hover:border-blue-500/40"
@@ -176,7 +176,7 @@ function App() {
                       >
                         <Sparkles className="w-4 h-4 text-blue-400" />
                       </a>
-                      <div 
+                      <div
                         className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-white/10"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -213,8 +213,8 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {apps.map((app, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 id={`guide-${index}`}
                 className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-purple-500/30 transition-colors"
               >
@@ -224,32 +224,32 @@ function App() {
                   </div>
                   <h3 className="text-xl font-bold text-white">{app.title}</h3>
                 </div>
-                
+
                 <ul className="space-y-4">
                   {[
                     app.title === "Chấm Công" && "Nhập Lương cơ bản (LCB) và số người phụ thuộc (NPT) ở thanh công cụ phía trên.",
                     app.title === "Chấm Công" && "Điền số giờ tăng ca vào các cột tương ứng: 150%, 200%, 300% tùy theo ngày làm việc.",
                     app.title === "Chấm Công" && "Sử dụng tính năng Đồng bộ Cloud với mã bí mật để lưu trữ và xem dữ liệu trên nhiều thiết bị.",
                     app.title === "Chấm Công" && "Tùy chỉnh các mức đóng bảo hiểm và trợ cấp trong phần Cài đặt (⚙️).",
-                    
+
                     app.title === "Annotations Counter" && "Tải lên file .xml hoặc .zip chứa annotations được xuất bản trực tiếp từ CVAT.",
                     app.title === "Annotations Counter" && "Nhập khoảng Frame (Start/End) nếu chỉ muốn thống kê một đoạn video hoặc chuỗi ảnh cụ thể.",
                     app.title === "Annotations Counter" && "Thêm nhãn vào danh sách Exclude Labels để loại bỏ các nhãn rác khỏi thống kê chính.",
                     app.title === "Annotations Counter" && "Kiểm tra các lỗi Duplicate (đối tượng trùng khít 100%) để đảm bảo chất lượng dữ liệu.",
-                    
+
                     app.title === "Images Viewer" && "Tải dữ liệu bằng cách chọn thư mục (Folder) hoặc tải lên file ZIP chứa ảnh.",
                     app.title === "Images Viewer" && "Sử dụng phím Mũi tên Phải/F để tới ảnh tiếp theo, Mũi tên Trái/D để quay lại.",
                     app.title === "Images Viewer" && "Nhấn Ctrl + F để tìm kiếm nhanh ảnh theo ID frame hoặc tên file cực kỳ tiện lợi.",
                     app.title === "Images Viewer" && "Bật/tắt Show Boxes để hiển thị khung bao từ file XML annotations đi kèm.",
-                    
+
                     app.title === "Attributes Check" && "Tải lên file XML/ZIP để kiểm tra tính đầy đủ của thuộc tính (attributes) trong dữ liệu.",
                     app.title === "Attributes Check" && "Hệ thống tự động phát hiện lỗi Missing (quên chọn) hoặc Extra (chọn thừa) thuộc tính.",
                     app.title === "Attributes Check" && "Xem báo cáo chi tiết theo từng nhãn với ID đối tượng và số Frame cụ thể để sửa lỗi.",
-                    
+
                     app.title === "Color Picker" && "Sử dụng phím Alt + S để mở kính lúp và chọn mã màu chính xác từ màn hình.",
                     app.title === "Color Picker" && "Nhấn Alt + A để vẽ vùng chọn Lasso hoặc Ctrl + V để phân tích màu từ Clipboard.",
                     app.title === "Color Picker" && "Công nghệ AI Ensemble Voting giúp định danh tên màu chính xác với 6 thuật toán lõi.",
-                    
+
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
                     <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed">
@@ -272,7 +272,7 @@ function App() {
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-bold text-white mb-4">Let's Build Something Great.</h3>
                 <p className="text-slate-500 max-w-sm mx-auto md:mx-0">
-                  Cảm ơn bạn đã ghé thăm hub ứng dụng. Hãy kết nối qua GitHub để cùng phát triển.
+                  Cảm ơn bạn đã ghé thăm hub ứng dụng.
                 </p>
               </div>
               <div className="flex justify-center md:justify-end">
