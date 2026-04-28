@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box } from 'lucide-react';
+import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -48,6 +48,14 @@ const apps: AppItem[] = [
     icon: <SquareCheck className="w-6 h-6" />,
     tags: ["QA", "Dataset", "Tools"],
     color: "from-amber-500/20 to-orange-500/20"
+  },
+  {
+    title: "Color Picker",
+    description: "Bộ công cụ AI mạnh mẽ để lấy màu chính xác từng pixel và phân tích nhóm màu thông minh.",
+    url: "https://color-analyze.vercel.app/",
+    icon: <Pipette className="w-6 h-6" />,
+    tags: ["Windows", "AI", "Design"],
+    color: "from-pink-500/20 to-red-500/20"
   }
 ];
 
@@ -141,7 +149,7 @@ function App() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {apps.map((app, index) => (
               <div 
                 key={index}
@@ -237,6 +245,10 @@ function App() {
                     app.title === "Attributes Check" && "Tải lên file XML/ZIP để kiểm tra tính đầy đủ của thuộc tính (attributes) trong dữ liệu.",
                     app.title === "Attributes Check" && "Hệ thống tự động phát hiện lỗi Missing (quên chọn) hoặc Extra (chọn thừa) thuộc tính.",
                     app.title === "Attributes Check" && "Xem báo cáo chi tiết theo từng nhãn với ID đối tượng và số Frame cụ thể để sửa lỗi.",
+                    
+                    app.title === "Color Picker" && "Sử dụng phím Alt + S để mở kính lúp và chọn mã màu chính xác từ màn hình.",
+                    app.title === "Color Picker" && "Nhấn Alt + A để vẽ vùng chọn Lasso hoặc Ctrl + V để phân tích màu từ Clipboard.",
+                    app.title === "Color Picker" && "Công nghệ AI Ensemble Voting giúp định danh tên màu chính xác với 6 thuật toán lõi.",
                     
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
