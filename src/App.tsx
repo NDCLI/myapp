@@ -23,23 +23,23 @@ const apps: AppItem[] = [
     url: "https://ccong.vercel.app/",
     icon: <Calculator className="w-6 h-6" />,
     tags: ["Personal", "Finance", "Tool"],
-    color: "from-green-500/20 to-emerald-500/20"
+    color: "from-blue-500/20 to-indigo-500/20"
   },
   {
     title: "Annotations Counter",
-    description: "Công cụ phân tích dữ liệu CVAT chuyên sâu. Thống kê chính xác và lọc dữ liệu thông minh.",
+    description: "Thống kê và phân tích dữ liệu gán nhãn từ CVAT. Hỗ trợ kiểm tra lỗi duplicate và lọc label chuyên sâu.",
     url: "https://exclude-ct.vercel.app/",
-    icon: <LayoutDashboard className="w-6 h-6" />,
-    tags: ["Next.js", "AI Data", "Analytics"],
-    color: "from-blue-500/20 to-cyan-500/20"
+    icon: <ImageIcon className="w-6 h-6" />,
+    tags: ["Data", "CVAT", "Stats"],
+    color: "from-purple-500/20 to-pink-500/20"
   },
   {
     title: "Images Viewer",
-    description: "Trình xem chuỗi hình ảnh hiệu năng cao. Hỗ trợ review dataset với tốc độ khung hình tối ưu.",
+    description: "Trình duyệt ảnh hiệu năng cao cho bộ dữ liệu lớn. Hỗ trợ hiển thị bounding box và điều hướng thông minh.",
     url: "https://imageview.vercel.app/",
-    icon: <ImageIcon className="w-6 h-6" />,
-    tags: ["Vite", "Vision", "Review"],
-    color: "from-purple-500/20 to-pink-500/20"
+    icon: <LayoutDashboard className="w-6 h-6" />,
+    tags: ["Viewer", "Utility", "Quality"],
+    color: "from-emerald-500/20 to-teal-500/20"
   },
   {
     title: "Attributes Check",
@@ -79,12 +79,12 @@ function App() {
       <div className="relative z-10">
         {/* Navigation / Top Bar */}
         <nav className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
-          <div className="flex items-center gap-2 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-12 transition-transform">
-              <Box className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <Box className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-2xl font-black text-white tracking-tighter italic uppercase">App Hub</span>
             </div>
-            <span className="font-black text-xl tracking-tighter text-white uppercase italic">Excl.Hub</span>
-          </div>
 
           <div className="flex gap-4">
             <a
@@ -125,29 +125,32 @@ function App() {
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
               <div className="hidden lg:block relative">
-                <div className="glass-card p-2 rounded-[3.5rem] aspect-square relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="relative z-10 w-full h-full rounded-[3rem] overflow-hidden border border-white/5">
-                    <img 
-                      src="/src/assets/hero-mockup.png" 
-                      alt="Dashboard Mockup" 
-                      className="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60" />
-                    
-                    {/* Floating elements to make it feel alive */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-8 space-y-4">
-                      <div className="flex justify-center">
-                        <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center animate-bounce shadow-2xl">
-                          <LayoutDashboard className="w-8 h-8 text-blue-400" />
-                        </div>
+                <div className="glass-card p-2 rounded-[2.5rem] aspect-[16/10] relative overflow-hidden group border-white/10 shadow-2xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  
+                  {/* Browser Window UI */}
+                  <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden bg-[#020617] border border-white/5 flex flex-col">
+                    <div className="h-8 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
+                      <div className="flex gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
                       </div>
+                      <div className="mx-auto w-48 h-4 bg-white/5 rounded-full" />
+                    </div>
+                    <div className="flex-1 overflow-hidden relative">
+                      <img 
+                        src="/src/assets/hero-app.png" 
+                        alt="Chấm Công Application" 
+                        className="w-full h-full object-cover object-top transform transition-transform duration-1000 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/40 via-transparent to-transparent" />
                     </div>
                   </div>
                   
-                  {/* Decorative glow */}
-                  <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none" />
-                  <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
+                  {/* Decoration */}
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none" />
+                  <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none" />
                 </div>
               </div>
             </div>
