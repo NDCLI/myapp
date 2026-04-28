@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
+import heroApp from './assets/hero-app.png';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -140,7 +141,7 @@ function App() {
                     </div>
                     <div className="flex-1 overflow-hidden relative">
                       <img 
-                        src="/src/assets/hero-app.png" 
+                        src={heroApp} 
                         alt="Chấm Công Application" 
                         className="w-full h-full object-cover object-top transform transition-transform duration-1000 group-hover:scale-105"
                       />
