@@ -124,16 +124,30 @@ function App() {
           <div className={cn("hidden md:block transition-all duration-1000 delay-300 transform", mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0")}>
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative p-8 glass-card rounded-[2.5rem] border-white/10 aspect-square flex flex-col justify-center overflow-hidden">
-                <div className="absolute inset-0 shimmer opacity-30"></div>
-                <div className="space-y-6 relative z-10">
-                  <div className="w-16 h-1 rounded-full bg-blue-500/50" />
-                  <div className="w-32 h-1 rounded-full bg-purple-500/30" />
-                  <div className="w-24 h-1 rounded-full bg-cyan-500/20" />
-                  <div className="pt-8 grid grid-cols-2 gap-4">
-                    <div className="h-24 rounded-2xl bg-white/5 border border-white/5" />
-                    <div className="h-24 rounded-2xl bg-white/5 border border-white/5" />
+              <div className="hidden lg:block relative">
+                <div className="glass-card p-2 rounded-[3.5rem] aspect-square relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="relative z-10 w-full h-full rounded-[3rem] overflow-hidden border border-white/5">
+                    <img 
+                      src="/src/assets/hero-mockup.png" 
+                      alt="Dashboard Mockup" 
+                      className="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60" />
+                    
+                    {/* Floating elements to make it feel alive */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-8 space-y-4">
+                      <div className="flex justify-center">
+                        <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center animate-bounce shadow-2xl">
+                          <LayoutDashboard className="w-8 h-8 text-blue-400" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  
+                  {/* Decorative glow */}
+                  <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none" />
+                  <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
                 </div>
               </div>
             </div>
