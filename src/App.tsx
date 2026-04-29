@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import chamcongSS from './assets/chamcong-ss.png';
 import annotationsSS from './assets/annotations-ss.png';
 import imageviewSS from './assets/imageview-ss.png';
@@ -340,6 +341,7 @@ function App() {
           </div>
         </footer>
       </div>
+      <Analytics />
     </div>
   );
 }
