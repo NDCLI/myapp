@@ -306,7 +306,7 @@ function App() {
                     app.title === "Chi Tiêu (QLCT)" && "Xem báo cáo chi tiết theo tháng với biểu đồ phân tích và so sánh ngân sách vs thực chi.",
                     app.title === "Chi Tiêu (QLCT)" && "Đặt giới hạn ngân sách cho mỗi danh mục để kiểm soát chi tiêu hiệu quả.",
 
-                    "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
+                    "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng."
                   ].filter(Boolean).map((step, i) => (
                     <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed">
                       <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-[10px] font-bold border border-purple-500/20">
