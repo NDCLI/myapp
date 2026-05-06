@@ -8,6 +8,7 @@ Hệ thống quản lý và truy cập tập trung các ứng dụng web chuyên
 2. **Annotations Counter**: Thống kê dữ liệu CVAT XML/ZIP.
 3. **Images Viewer**: Duyệt chuỗi hình ảnh hiệu năng cao.
 4. **Attributes Check**: Kiểm tra lỗi thuộc tính dữ liệu AI.
+5. **Chi Tiêu (QLCT)**: Quản lý chi tiêu cá nhân với dashboard phân tích ([https://qlct-tc.vercel.app/](https://qlct-tc.vercel.app/))
 
 ## 🛠️ Công nghệ sử dụng
 - **React 19**
@@ -17,7 +18,7 @@ Hệ thống quản lý và truy cập tập trung các ứng dụng web chuyên
 - **Glassmorphism Design**
 
 ## 📖 Hướng dẫn sử dụng
-Mỗi ứng dụng có một phần hướng dẫn chi tiết (Usage Guide) ngay trên trang chủ của Hub. Bạn có thể nhấn vào biểu tượng ✨ (Sparkles) trên mỗi thẻ ứng dụng để nhảy nhanh đến phần hướng dẫn tương ứng.
+Mỗi ứng dụng có một phần hướng dẫn chi tiết (Usage Guide) ngay trên trang chủ của Hub. Bạn có thể nhấn vào biểu tượng ✨ (Sparkles) trên mỗi thẻ ứng dụng để xem hướng dẫn.
 
 ---
 *Phát triển bởi NDCLI & Antigravity*
