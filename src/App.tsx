@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
+import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette, Wallet } from 'lucide-react';
 import chamcongSS from './assets/chamcong-ss.png';
 import annotationsSS from './assets/annotations-ss.png';
 import imageviewSS from './assets/imageview-ss.png';
@@ -60,6 +60,14 @@ const apps: AppItem[] = [
     icon: <Pipette className="w-6 h-6" />,
     tags: ["Windows", "AI", "Design"],
     color: "from-pink-500/20 to-red-500/20"
+  },
+  {
+    title: "Chi Tiêu (QLCT)",
+    description: "Ứng dụng quản lý chi tiêu cá nhân với dashboard phân tích, ngân sách, và báo cáo chi tiết.",
+    url: "https://qlct-tc.vercel.app/",
+    icon: <Wallet className="w-6 h-6" />,
+    tags: ["Finance", "Personal", "Dashboard"],
+    color: "from-green-500/20 to-emerald-500/20"
   }
 ];
 
@@ -127,7 +135,7 @@ function App() {
 
           <div className={cn("hidden md:block transition-all duration-1000 delay-300 transform", mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0")}>
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-[...]
               <div className="hidden lg:block relative">
                 <div className="glass-card p-2 rounded-[2.5rem] aspect-[16/10] relative overflow-hidden group border-white/10 shadow-2xl">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -206,7 +214,7 @@ function App() {
 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-8">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500">
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-[...]
                       {app.icon}
                     </div>
                     <div className="flex gap-2">
@@ -291,6 +299,12 @@ function App() {
                     app.title === "Color Picker" && "Sử dụng phím Alt + S để mở kính lúp và chọn mã màu chính xác từ màn hình.",
                     app.title === "Color Picker" && "Nhấn Alt + A để vẽ vùng chọn Lasso hoặc Ctrl + V để phân tích màu từ Clipboard.",
                     app.title === "Color Picker" && "Công nghệ AI Ensemble Voting giúp định danh tên màu chính xác với 6 thuật toán lõi.",
+
+                    app.title === "Chi Tiêu (QLCT)" && "Đăng nhập bằng tài khoản Google để bắt đầu quản lý chi tiêu của bạn.",
+                    app.title === "Chi Tiêu (QLCT)" && "Tạo các danh mục chi tiêu (Food, Transport, Entertainment...) để phân loại chi tiêu.",
+                    app.title === "Chi Tiêu (QLCT)" && "Thêm giao dịch mới: chọn danh mục, nhập số tiền, và ghi chú để theo dõi chi tiêu.",
+                    app.title === "Chi Tiêu (QLCT)" && "Xem báo cáo chi tiết theo tháng với biểu đồ phân tích và so sánh ngân sách vs thực chi.",
+                    app.title === "Chi Tiêu (QLCT)" && "Đặt giới hạn ngân sách cho mỗi danh mục để kiểm soát chi tiêu hiệu quả.",
 
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
