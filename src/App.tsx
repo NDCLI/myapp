@@ -91,12 +91,12 @@ function App() {
       <div className="relative z-10">
         {/* Navigation / Top Bar */}
         <nav className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <Box className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-black text-white tracking-tighter italic uppercase">App Hub</span>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <Box className="w-6 h-6 text-white" />
             </div>
+            <span className="text-2xl font-black text-white tracking-tighter italic uppercase">App Hub</span>
+          </div>
 
           <div className="flex gap-4">
             <a
@@ -135,7 +135,7 @@ function App() {
 
           <div className={cn("hidden md:block transition-all duration-1000 delay-300 transform", mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0")}>
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-[...]
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-700" />
               <div className="hidden lg:block relative">
                 <div className="glass-card p-2 rounded-[2.5rem] aspect-[16/10] relative overflow-hidden group border-white/10 shadow-2xl">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -214,7 +214,7 @@ function App() {
 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-8">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-[...]
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-300">
                       {app.icon}
                     </div>
                     <div className="flex gap-2">
@@ -306,7 +306,7 @@ function App() {
                     app.title === "Chi Tiêu (QLCT)" && "Xem báo cáo chi tiết theo tháng với biểu đồ phân tích và so sánh ngân sách vs thực chi.",
                     app.title === "Chi Tiêu (QLCT)" && "Đặt giới hạn ngân sách cho mỗi danh mục để kiểm soát chi tiêu hiệu quả.",
 
-                    "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng."
+                    "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
                     <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed">
                       <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-[10px] font-bold border border-purple-500/20">
