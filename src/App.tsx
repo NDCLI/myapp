@@ -62,7 +62,7 @@ const apps: AppItem[] = [
     color: "from-pink-500/20 to-red-500/20"
   },
   {
-    title: "Chi Tiêu (QLCT)",
+    title: "Quản lý chi tiêu",
     description: "Ứng dụng quản lý chi tiêu cá nhân với dashboard phân tích, ngân sách, và báo cáo chi tiết.",
     url: "https://qlct-tc.vercel.app/",
     icon: <Wallet className="w-6 h-6" />,
