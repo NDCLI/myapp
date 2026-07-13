@@ -1,14 +1,14 @@
-# Apps Hub - Centralized Dashboard
+# CVAT Utility Hub - Centralized Dashboard
 
-Hệ thống quản lý và truy cập tập trung các ứng dụng web chuyên dụng.
+Hệ thống quản lý tập trung các công cụ hỗ trợ CVAT và tiện ích cá nhân.
 
 ## 🚀 Các ứng dụng tích hợp
 
 1. **Chấm Công**: Quản lý ngày công và tính lương cá nhân.
 2. **Annotations Counter**: Thống kê dữ liệu CVAT XML/ZIP.
 3. **Images Viewer**: Duyệt chuỗi hình ảnh hiệu năng cao.
-4. **Attributes Check**: Kiểm tra lỗi thuộc tính dữ liệu AI.
-5. **Chi Tiêu (QLCT)**: Quản lý chi tiêu cá nhân với dashboard phân tích ([https://qlct-tc.vercel.app/](https://qlct-tc.vercel.app/))
+4. **Color Picker**: Bộ công cụ AI lấy màu và phân tích nhóm màu.
+5. **CVAT Box Tool**: Phát hiện và xử lý trùng lặp bounding box cho dữ liệu CVAT XML ([https://boxct.vercel.app/](https://boxct.vercel.app/))
 
 ## 🛠️ Công nghệ sử dụng
 - **React 19**

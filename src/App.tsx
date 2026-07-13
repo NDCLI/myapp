@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, SquareCheck, Sparkles, Monitor, Cpu, Box, Pipette, Wallet } from 'lucide-react';
+import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
 import chamcongSS from './assets/chamcong-ss.png';
 import annotationsSS from './assets/annotations-ss.png';
 import imageviewSS from './assets/imageview-ss.png';
@@ -12,62 +12,66 @@ function cn(...inputs: ClassValue[]) {
 }
 
 interface AppItem {
+  id: string;
   title: string;
   description: string;
   url: string;
   icon: React.ReactNode;
   tags: string[];
   color: string;
+  category: 'cvat' | 'personal';
 }
 
 const apps: AppItem[] = [
   {
+    id: "chamcong",
     title: "Chấm Công",
     description: "Công cụ theo dõi ngày công và quản lý thu nhập cá nhân. Giao diện đơn giản, tính toán chính xác.",
     url: "https://ccong.vercel.app/",
     icon: <Calculator className="w-6 h-6" />,
     tags: ["Personal", "Finance", "Tool"],
-    color: "from-blue-500/20 to-indigo-500/20"
+    color: "from-blue-500/20 to-indigo-500/20",
+    category: "personal"
   },
   {
+    id: "annotations",
     title: "Annotations Counter",
     description: "Thống kê và phân tích dữ liệu gán nhãn từ CVAT. Hỗ trợ kiểm tra lỗi duplicate và lọc label chuyên sâu.",
     url: "https://exclude-ct.vercel.app/",
     icon: <ImageIcon className="w-6 h-6" />,
     tags: ["Data", "CVAT", "Stats"],
-    color: "from-purple-500/20 to-pink-500/20"
+    color: "from-purple-500/20 to-pink-500/20",
+    category: "cvat"
   },
   {
+    id: "imageview",
     title: "Images Viewer",
     description: "Trình duyệt ảnh hiệu năng cao cho bộ dữ liệu lớn. Hỗ trợ hiển thị bounding box và điều hướng thông minh.",
     url: "https://imageview.vercel.app/",
     icon: <LayoutDashboard className="w-6 h-6" />,
     tags: ["Viewer", "Utility", "Quality"],
-    color: "from-emerald-500/20 to-teal-500/20"
+    color: "from-emerald-500/20 to-teal-500/20",
+    category: "cvat"
   },
   {
-    title: "Attributes Check",
-    description: "Kiểm tra tính toàn vẹn của thuộc tính dữ liệu. Đảm bảo chất lượng dataset cho các mô hình AI.",
-    url: "https://atrb.vercel.app/",
-    icon: <SquareCheck className="w-6 h-6" />,
-    tags: ["QA", "Dataset", "Tools"],
-    color: "from-amber-500/20 to-orange-500/20"
-  },
-  {
+    id: "colorpicker",
     title: "Color Picker",
     description: "Bộ công cụ AI mạnh mẽ để lấy màu chính xác từng pixel và phân tích nhóm màu thông minh.",
     url: "https://color-analyze.vercel.app/",
     icon: <Pipette className="w-6 h-6" />,
     tags: ["Windows", "AI", "Design"],
-    color: "from-pink-500/20 to-red-500/20"
+    color: "from-pink-500/20 to-red-500/20",
+    category: "cvat"
   },
   {
-    title: "Quản lý chi tiêu",
-    description: "Ứng dụng quản lý chi tiêu cá nhân với dashboard phân tích, ngân sách, và báo cáo chi tiết.",
-    url: "https://qlct-tc.vercel.app/",
-    icon: <Wallet className="w-6 h-6" />,
-    tags: ["Finance", "Personal", "Dashboard"],
-    color: "from-green-500/20 to-emerald-500/20"
+    id: "cvatbox",
+    title: "CVAT Box Tool",
+    description: "Công cụ phát hiện và xử lý trùng lặp bounding box (Duplicate Box) cho dữ liệu CVAT XML. Đảm bảo chất lượng dữ liệu AI.",
+    url: "https://boxct.vercel.app/",
+    icon: <Box className="w-6 h-6" />,
+    tags: ["QA", "CVAT", "Annotation"],
+    color: "from-amber-500/20 to-orange-500/20",
+    category: "cvat"
   }
 ];
 
@@ -77,6 +81,9 @@ function App() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const cvatApps = apps.filter(app => app.category === 'cvat');
+  const personalApps = apps.filter(app => app.category === 'personal');
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-200 selection:bg-blue-500/30 selection:text-blue-200 relative overflow-hidden">
@@ -95,7 +102,7 @@ function App() {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <Box className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-black text-white tracking-tighter italic uppercase">App Hub</span>
+            <span className="text-2xl font-black text-white tracking-normal italic uppercase">CVAT Utility Hub</span>
           </div>
 
           <div className="flex gap-4">
@@ -192,17 +199,18 @@ function App() {
 
         {/* Apps Section */}
         <section id="apps-grid" className="max-w-7xl mx-auto px-6 pb-24">
+          {/* CVAT Utilities Group */}
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Applications</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">CVAT Utilities</h2>
               <div className="h-1 w-12 bg-blue-500 rounded-full" />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {apps.map((app, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+            {cvatApps.map((app, index) => (
               <div
-                key={index}
+                key={app.id}
                 onClick={() => window.open(app.url, '_blank')}
                 className={cn(
                   "glass-card p-6 rounded-[2rem] flex flex-col glass-card-hover group relative overflow-hidden transition-all duration-700 cursor-pointer",
@@ -219,7 +227,69 @@ function App() {
                     </div>
                     <div className="flex gap-2">
                       <a
-                        href={`#guide-${index}`}
+                        href={`#guide-${app.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-blue-500/20 hover:border-blue-500/40"
+                        title="Xem hướng dẫn"
+                      >
+                        <Sparkles className="w-4 h-4 text-blue-400" />
+                      </a>
+                      <div
+                        className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-white/10"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                    {app.title}
+                  </h3>
+                  <p className="text-slate-400 text-sm mb-8 leading-relaxed line-clamp-3">
+                    {app.description}
+                  </p>
+
+                  <div className="mt-auto flex flex-wrap gap-2">
+                    {app.tags.map(tag => (
+                      <span key={tag} className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Personal Utilities Group */}
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-2">Personal Utilities</h2>
+              <div className="h-1 w-12 bg-purple-500 rounded-full" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {personalApps.map((app, index) => (
+              <div
+                key={app.id}
+                onClick={() => window.open(app.url, '_blank')}
+                className={cn(
+                  "glass-card p-6 rounded-[2rem] flex flex-col glass-card-hover group relative overflow-hidden transition-all duration-700 cursor-pointer",
+                  mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+                )}
+                style={{ transitionDelay: `${index * 150}ms` }}
+              >
+                <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", app.color)} />
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-8">
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-300">
+                      {app.icon}
+                    </div>
+                    <div className="flex gap-2">
+                      <a
+                        href={`#guide-${app.id}`}
                         onClick={(e) => e.stopPropagation()}
                         className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-blue-500/20 hover:border-blue-500/40"
                         title="Xem hướng dẫn"
@@ -262,10 +332,10 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {apps.map((app, index) => (
+            {apps.map((app) => (
               <div
-                key={index}
-                id={`guide-${index}`}
+                key={app.id}
+                id={`guide-${app.id}`}
                 className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-purple-500/30 transition-colors"
               >
                 <div className="flex items-center gap-4 mb-6">
@@ -292,19 +362,14 @@ function App() {
                     app.title === "Images Viewer" && "Nhấn Ctrl + F để tìm kiếm nhanh ảnh theo ID frame hoặc tên file cực kỳ tiện lợi.",
                     app.title === "Images Viewer" && "Bật/tắt Show Boxes để hiển thị khung bao từ file XML annotations đi kèm.",
 
-                    app.title === "Attributes Check" && "Tải lên file XML/ZIP để kiểm tra tính đầy đủ của thuộc tính (attributes) trong dữ liệu.",
-                    app.title === "Attributes Check" && "Hệ thống tự động phát hiện lỗi Missing (quên chọn) hoặc Extra (chọn thừa) thuộc tính.",
-                    app.title === "Attributes Check" && "Xem báo cáo chi tiết theo từng nhãn với ID đối tượng và số Frame cụ thể để sửa lỗi.",
-
                     app.title === "Color Picker" && "Sử dụng phím Alt + S để mở kính lúp và chọn mã màu chính xác từ màn hình.",
                     app.title === "Color Picker" && "Nhấn Alt + A để vẽ vùng chọn Lasso hoặc Ctrl + V để phân tích màu từ Clipboard.",
                     app.title === "Color Picker" && "Công nghệ AI Ensemble Voting giúp định danh tên màu chính xác với 6 thuật toán lõi.",
 
-                    app.title === "Chi Tiêu (QLCT)" && "Đăng nhập bằng tài khoản Google để bắt đầu quản lý chi tiêu của bạn.",
-                    app.title === "Chi Tiêu (QLCT)" && "Tạo các danh mục chi tiêu (Food, Transport, Entertainment...) để phân loại chi tiêu.",
-                    app.title === "Chi Tiêu (QLCT)" && "Thêm giao dịch mới: chọn danh mục, nhập số tiền, và ghi chú để theo dõi chi tiêu.",
-                    app.title === "Chi Tiêu (QLCT)" && "Xem báo cáo chi tiết theo tháng với biểu đồ phân tích và so sánh ngân sách vs thực chi.",
-                    app.title === "Chi Tiêu (QLCT)" && "Đặt giới hạn ngân sách cho mỗi danh mục để kiểm soát chi tiêu hiệu quả.",
+                    app.title === "CVAT Box Tool" && "Tải lên file XML chứa annotations xuất từ CVAT để bắt đầu phân tích.",
+                    app.title === "CVAT Box Tool" && "Hệ thống tự động quét và hiển thị danh sách các bounding box bị trùng lặp (duplicate).",
+                    app.title === "CVAT Box Tool" && "Xem trực quan thông tin chi tiết của box trùng lặp: ID đối tượng, tọa độ và Frame tương ứng.",
+                    app.title === "CVAT Box Tool" && "Tải xuống file XML sạch đã được loại bỏ tự động các box bị trùng lặp.",
 
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
