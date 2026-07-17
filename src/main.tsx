@@ -5,7 +5,7 @@ import './index.css'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 
-posthog.init('phc_qspicXaSsvbdvfV74uZfS6Gc8hQN5wiX6g6cvufeN7p8', {
+posthog.init('phc_qspiCxaSsvbdvfV74uZfs6Gc8hQN5wiX6g6cvufeN7p8', {
   api_host: 'https://us.i.posthog.com',
   person_profiles: 'identified_only',
 })
