@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
+import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, Sparkles, Monitor, Cpu, Box, Pipette, ScanSearch } from 'lucide-react';
 import chamcongSS from './assets/chamcong-ss.png';
 import annotationsSS from './assets/annotations-ss.png';
 import imageviewSS from './assets/imageview-ss.png';
 import boxSS from './assets/box-ss.png';
+import reidAutoSS from './assets/reid-auto-ss.png';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -72,6 +73,16 @@ const apps: AppItem[] = [
     tags: ["QA", "CVAT", "Annotation"],
     color: "from-amber-500/20 to-orange-500/20",
     category: "cvat"
+  },
+  {
+    id: "reidauto",
+    title: "ReID Auto Draw",
+    description: "Công cụ Windows dùng AI Re-ID cục bộ để nhận diện nhân vật từ ảnh chụp màn hình và tự động vẽ khung đánh dấu.",
+    url: "https://github.com/NDCLI/ReIDAuto",
+    icon: <ScanSearch className="w-6 h-6" />,
+    tags: ["Windows", "Python", "Re-ID"],
+    color: "from-cyan-500/20 to-blue-500/20",
+    category: "cvat"
   }
 ];
 
@@ -85,6 +96,15 @@ const featuredProjects = [
     url: 'https://boxct.vercel.app/',
     githubUrl: 'https://github.com/NDCLI/box',
     tags: ['React 19', 'TypeScript', 'CVAT'],
+  },
+  {
+    id: 'reidauto',
+    title: 'ReID Auto Draw',
+    eyebrow: 'Desktop AI utility',
+    description: 'Nhận diện nhân vật bằng AI Re-ID cục bộ và tự động vẽ khung đánh dấu trực tiếp từ ảnh chụp màn hình.',
+    image: reidAutoSS,
+    url: 'https://github.com/NDCLI/ReIDAuto',
+    tags: ['Windows', 'Python', 'OpenVINO'],
   },
   {
     id: 'chamcong',
@@ -224,7 +244,7 @@ function App() {
                         </div>
                         <div className="flex gap-2">
                           <a href={activeFeatured.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#020617] text-[8px] font-black hover:bg-cyan-100 transition-colors">
-                            Live demo <ExternalLink className="w-2.5 h-2.5" />
+                            {activeFeatured.id === 'reidauto' ? 'View GitHub' : 'Live demo'} <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                           {'githubUrl' in activeFeatured && activeFeatured.githubUrl && (
                             <a href={activeFeatured.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-[8px] font-black hover:bg-white/10 transition-colors">
@@ -234,7 +254,7 @@ function App() {
                         </div>
                       </div>
 
-                      <div className="absolute inset-x-4 bottom-3 grid grid-cols-4 gap-1.5">
+                      <div className="absolute inset-x-4 bottom-3 grid grid-cols-5 gap-1.5">
                         {featuredProjects.map(project => (
                           <button
                             key={project.id}
@@ -438,6 +458,11 @@ function App() {
                     app.title === "CVAT Box Tool" && "Hệ thống tự động quét và hiển thị danh sách các bounding box bị trùng lặp (duplicate).",
                     app.title === "CVAT Box Tool" && "Xem trực quan thông tin chi tiết của box trùng lặp: ID đối tượng, tọa độ và Frame tương ứng.",
                     app.title === "CVAT Box Tool" && "Tải xuống file XML sạch đã được loại bỏ tự động các box bị trùng lặp.",
+
+                    app.title === "ReID Auto Draw" && "Cài đặt ứng dụng trên Windows và chuẩn bị các thư mục ảnh mẫu trong thư mục queries.",
+                    app.title === "ReID Auto Draw" && "Chọn nhóm nhân vật cần tìm hoặc dùng chế độ tự động phân loại ảnh mẫu từ Clipboard.",
+                    app.title === "ReID Auto Draw" && "Chụp giao diện Re-ID bằng Snipping Tool hoặc ShareX để AI tự động nhận diện và vẽ khung.",
+                    app.title === "ReID Auto Draw" && "Dùng cửa sổ Batch Review để xóa khung sai, bổ sung khung thiếu và lưu kết quả.",
 
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
