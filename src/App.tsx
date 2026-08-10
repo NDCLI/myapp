@@ -76,9 +76,9 @@ const apps: AppItem[] = [
   },
   {
     id: "reidauto",
-    title: "ReID Auto Draw",
+    title: "ReID_Auto",
     description: "Công cụ Windows dùng AI Re-ID cục bộ để nhận diện nhân vật từ ảnh chụp màn hình và tự động vẽ khung đánh dấu.",
-    url: "https://github.com/NDCLI/ReIDAuto",
+    url: "https://github.com/NDCLI/ReID_Auto",
     icon: <ScanSearch className="w-6 h-6" />,
     tags: ["Windows", "Python", "Re-ID"],
     color: "from-cyan-500/20 to-blue-500/20",
@@ -99,11 +99,11 @@ const featuredProjects = [
   },
   {
     id: 'reidauto',
-    title: 'ReID Auto Draw',
+    title: 'ReID_Auto',
     eyebrow: 'Desktop AI utility',
     description: 'Nhận diện nhân vật bằng AI Re-ID cục bộ và tự động vẽ khung đánh dấu trực tiếp từ ảnh chụp màn hình.',
     image: reidAutoSS,
-    url: 'https://github.com/NDCLI/ReIDAuto',
+    url: 'https://github.com/NDCLI/ReID_Auto',
     tags: ['Windows', 'Python', 'OpenVINO'],
   },
   {
@@ -459,10 +459,10 @@ function App() {
                     app.title === "CVAT Box Tool" && "Xem trực quan thông tin chi tiết của box trùng lặp: ID đối tượng, tọa độ và Frame tương ứng.",
                     app.title === "CVAT Box Tool" && "Tải xuống file XML sạch đã được loại bỏ tự động các box bị trùng lặp.",
 
-                    app.title === "ReID Auto Draw" && "Cài đặt ứng dụng trên Windows và chuẩn bị các thư mục ảnh mẫu trong thư mục queries.",
-                    app.title === "ReID Auto Draw" && "Chọn nhóm nhân vật cần tìm hoặc dùng chế độ tự động phân loại ảnh mẫu từ Clipboard.",
-                    app.title === "ReID Auto Draw" && "Chụp giao diện Re-ID bằng Snipping Tool hoặc ShareX để AI tự động nhận diện và vẽ khung.",
-                    app.title === "ReID Auto Draw" && "Dùng cửa sổ Batch Review để xóa khung sai, bổ sung khung thiếu và lưu kết quả.",
+                    app.title === "ReID_Auto" && "Cài đặt ứng dụng trên Windows và chuẩn bị các thư mục ảnh mẫu trong thư mục queries.",
+                    app.title === "ReID_Auto" && "Chọn nhóm nhân vật cần tìm hoặc dùng chế độ tự động phân loại ảnh mẫu từ Clipboard.",
+                    app.title === "ReID_Auto" && "Chụp giao diện Re-ID bằng Snipping Tool hoặc ShareX để AI tự động nhận diện và vẽ khung.",
+                    app.title === "ReID_Auto" && "Dùng cửa sổ Batch Review để xóa khung sai, bổ sung khung thiếu và lưu kết quả.",
 
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
