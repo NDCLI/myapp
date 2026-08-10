@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, Sparkles, Monitor, Cpu, Box, Pipette } from 'lucide-react';
+import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, Sparkles, Monitor, Cpu, Box, Pipette, ScanSearch } from 'lucide-react';
 import chamcongSS from './assets/chamcong-ss.png';
 import annotationsSS from './assets/annotations-ss.png';
 import imageviewSS from './assets/imageview-ss.png';
-import colorpickerSS from './assets/colorpicker-ss.png';
+import boxSS from './assets/box-ss.png';
+import reidAutoSS from './assets/reid-auto-ss.png';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -72,18 +73,80 @@ const apps: AppItem[] = [
     tags: ["QA", "CVAT", "Annotation"],
     color: "from-amber-500/20 to-orange-500/20",
     category: "cvat"
+  },
+  {
+    id: "reidauto",
+    title: "ReID Auto Draw",
+    description: "Công cụ Windows dùng AI Re-ID cục bộ để nhận diện nhân vật từ ảnh chụp màn hình và tự động vẽ khung đánh dấu.",
+    url: "https://github.com/NDCLI/ReIDAuto",
+    icon: <ScanSearch className="w-6 h-6" />,
+    tags: ["Windows", "Python", "Re-ID"],
+    color: "from-cyan-500/20 to-blue-500/20",
+    category: "cvat"
   }
 ];
 
+const featuredProjects = [
+  {
+    id: 'cvatbox',
+    title: 'CVAT Box Inspector',
+    eyebrow: 'Featured project',
+    description: 'Audit bounding boxes, find duplicates and inspect CVAT XML or ZIP datasets directly in your browser.',
+    image: boxSS,
+    url: 'https://boxct.vercel.app/',
+    githubUrl: 'https://github.com/NDCLI/box',
+    tags: ['React 19', 'TypeScript', 'CVAT'],
+  },
+  {
+    id: 'reidauto',
+    title: 'ReID Auto Draw',
+    eyebrow: 'Desktop AI utility',
+    description: 'Nhận diện nhân vật bằng AI Re-ID cục bộ và tự động vẽ khung đánh dấu trực tiếp từ ảnh chụp màn hình.',
+    image: reidAutoSS,
+    url: 'https://github.com/NDCLI/ReIDAuto',
+    tags: ['Windows', 'Python', 'OpenVINO'],
+  },
+  {
+    id: 'chamcong',
+    title: 'Chấm Công',
+    eyebrow: 'Personal finance',
+    description: 'Theo dõi ngày công, tăng ca và quản lý thu nhập cá nhân trong một giao diện gọn gàng.',
+    image: chamcongSS,
+    url: 'https://ccong.vercel.app/',
+    tags: ['Finance', 'Personal', 'Web'],
+  },
+  {
+    id: 'annotations',
+    title: 'Annotations Counter',
+    eyebrow: 'Data utility',
+    description: 'Thống kê và phân tích dữ liệu gán nhãn từ CVAT với bộ lọc chuyên sâu.',
+    image: annotationsSS,
+    url: 'https://exclude-ct.vercel.app/',
+    tags: ['CVAT', 'Data', 'Stats'],
+  },
+  {
+    id: 'imageview',
+    title: 'Images Viewer',
+    eyebrow: 'Dataset viewer',
+    description: 'Duyệt bộ ảnh lớn, hiển thị bounding box và điều hướng frame nhanh chóng.',
+    image: imageviewSS,
+    url: 'https://imageview.vercel.app/',
+    tags: ['Viewer', 'QA', 'Utility'],
+  },
+] as const;
+
 function App() {
   const [mounted, setMounted] = useState(false);
+  const [activeFeaturedId, setActiveFeaturedId] = useState('cvatbox');
 
   useEffect(() => {
-    setMounted(true);
+    const frame = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   const cvatApps = apps.filter(app => app.category === 'cvat');
   const personalApps = apps.filter(app => app.category === 'personal');
+  const activeFeatured = featuredProjects.find(project => project.id === activeFeaturedId) ?? featuredProjects[0];
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-200 selection:bg-blue-500/30 selection:text-blue-200 relative overflow-hidden">
@@ -157,34 +220,59 @@ function App() {
                       </div>
                       <div className="mx-auto w-48 h-4 bg-white/5 rounded-full" />
                     </div>
-                    <div className="flex-1 overflow-hidden relative p-1 bg-[#020617]">
-                      <div className="grid grid-cols-2 gap-1 h-full">
-                        <div className="relative overflow-hidden rounded-lg group/img">
-                          <img src={chamcongSS} alt="Chấm Công" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
-                          <div className="absolute inset-0 bg-blue-500/10 flex items-end p-2">
-                            <span className="text-[8px] font-bold text-white bg-blue-600 px-1.5 py-0.5 rounded shadow-lg">Chấm Công</span>
-                          </div>
+                    <div className="flex-1 overflow-hidden relative bg-[#020617]">
+                      <img
+                        key={activeFeatured.id}
+                        src={activeFeatured.image}
+                        alt={`${activeFeatured.title} preview`}
+                        className="absolute inset-0 w-full h-full object-cover animate-featured-in"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/70 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-[#020617]/10" />
+
+                      <div className="absolute inset-x-0 top-0 p-7 max-w-[68%]">
+                        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-cyan-400/20 bg-cyan-400/10 text-[8px] font-black uppercase tracking-[0.18em] text-cyan-300 mb-3">
+                          <Sparkles className="w-2.5 h-2.5" />
+                          {activeFeatured.eyebrow}
                         </div>
-                        <div className="relative overflow-hidden rounded-lg group/img">
-                          <img src={annotationsSS} alt="Annotations" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
-                          <div className="absolute inset-0 bg-purple-500/10 flex items-end p-2">
-                            <span className="text-[8px] font-bold text-white bg-purple-600 px-1.5 py-0.5 rounded shadow-lg">Counter</span>
-                          </div>
+                        <h3 className="text-xl font-black text-white tracking-tight mb-2">{activeFeatured.title}</h3>
+                        <p className="text-[9px] leading-relaxed text-slate-300 line-clamp-3 mb-3">{activeFeatured.description}</p>
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {activeFeatured.tags.map(tag => (
+                            <span key={tag} className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[7px] font-bold text-slate-300">{tag}</span>
+                          ))}
                         </div>
-                        <div className="relative overflow-hidden rounded-lg group/img">
-                          <img src={imageviewSS} alt="Image Viewer" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
-                          <div className="absolute inset-0 bg-emerald-500/10 flex items-end p-2">
-                            <span className="text-[8px] font-bold text-white bg-emerald-600 px-1.5 py-0.5 rounded shadow-lg">Viewer</span>
-                          </div>
-                        </div>
-                        <div className="relative overflow-hidden rounded-lg group/img">
-                          <img src={colorpickerSS} alt="Color Picker" className="w-full h-full object-cover transform transition-transform duration-700 group-hover/img:scale-110" />
-                          <div className="absolute inset-0 bg-pink-500/10 flex items-end p-2">
-                            <span className="text-[8px] font-bold text-white bg-pink-600 px-1.5 py-0.5 rounded shadow-lg">Color AI</span>
-                          </div>
+                        <div className="flex gap-2">
+                          <a href={activeFeatured.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#020617] text-[8px] font-black hover:bg-cyan-100 transition-colors">
+                            {activeFeatured.id === 'reidauto' ? 'View GitHub' : 'Live demo'} <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                          {'githubUrl' in activeFeatured && activeFeatured.githubUrl && (
+                            <a href={activeFeatured.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-[8px] font-black hover:bg-white/10 transition-colors">
+                              <Github className="w-2.5 h-2.5" /> Source
+                            </a>
+                          )}
                         </div>
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/40 via-transparent to-transparent pointer-events-none" />
+
+                      <div className="absolute inset-x-4 bottom-3 grid grid-cols-5 gap-1.5">
+                        {featuredProjects.map(project => (
+                          <button
+                            key={project.id}
+                            type="button"
+                            onClick={() => setActiveFeaturedId(project.id)}
+                            aria-label={`Show ${project.title}`}
+                            className={cn(
+                              "group/tab min-w-0 rounded-lg border px-2 py-2 text-left backdrop-blur-md transition-all",
+                              project.id === activeFeatured.id
+                                ? "bg-white/15 border-cyan-300/40 shadow-lg shadow-cyan-500/10"
+                                : "bg-[#020617]/65 border-white/10 hover:bg-white/10"
+                            )}
+                          >
+                            <span className={cn("block truncate text-[7px] font-black", project.id === activeFeatured.id ? "text-white" : "text-slate-400 group-hover/tab:text-white")}>{project.title}</span>
+                            <span className={cn("mt-1 block h-0.5 rounded-full transition-all", project.id === activeFeatured.id ? "w-full bg-cyan-400" : "w-3 bg-white/15")}/>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   
@@ -370,6 +458,11 @@ function App() {
                     app.title === "CVAT Box Tool" && "Hệ thống tự động quét và hiển thị danh sách các bounding box bị trùng lặp (duplicate).",
                     app.title === "CVAT Box Tool" && "Xem trực quan thông tin chi tiết của box trùng lặp: ID đối tượng, tọa độ và Frame tương ứng.",
                     app.title === "CVAT Box Tool" && "Tải xuống file XML sạch đã được loại bỏ tự động các box bị trùng lặp.",
+
+                    app.title === "ReID Auto Draw" && "Cài đặt ứng dụng trên Windows và chuẩn bị các thư mục ảnh mẫu trong thư mục queries.",
+                    app.title === "ReID Auto Draw" && "Chọn nhóm nhân vật cần tìm hoặc dùng chế độ tự động phân loại ảnh mẫu từ Clipboard.",
+                    app.title === "ReID Auto Draw" && "Chụp giao diện Re-ID bằng Snipping Tool hoặc ShareX để AI tự động nhận diện và vẽ khung.",
+                    app.title === "ReID Auto Draw" && "Dùng cửa sổ Batch Review để xóa khung sai, bổ sung khung thiếu và lưu kết quả.",
 
                     "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
                   ].filter(Boolean).map((step, i) => (
