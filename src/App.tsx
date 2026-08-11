@@ -1,517 +1,309 @@
-import { useEffect, useState } from 'react';
-import { Github, ExternalLink, LayoutDashboard, Image as ImageIcon, Calculator, Sparkles, Monitor, Cpu, Box, Pipette, ScanSearch } from 'lucide-react';
-import chamcongSS from './assets/chamcong-ss.png';
-import annotationsSS from './assets/annotations-ss.png';
-import imageviewSS from './assets/imageview-ss.png';
-import boxSS from './assets/box-ss.png';
-import reidAutoSS from './assets/reid-auto-ss.png';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowUpRight, Box, Github, Search, Sparkles, X } from 'lucide-react';
+import { AppCard } from './components/AppCard';
+import { DetailPanel } from './components/DetailPanel';
+import { apps, categories, type AppItem, type Category } from './data/apps';
+import { cn } from './lib/cn';
 
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+const categoryHeadings: Record<Category, { title: string; description: string }> = {
+  all: {
+    title: 'Bộ công cụ',
+    description: 'Tất cả tiện ích trong App Dock.',
+  },
+  cvat: {
+    title: 'Công cụ CVAT',
+    description: 'Kiểm tra, duyệt và xử lý dữ liệu gán nhãn.',
+  },
+  personal: {
+    title: 'Tiện ích cá nhân',
+    description: 'Những công cụ nhỏ cho công việc hằng ngày.',
+  },
+};
+
+function normalizeSearch(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('vi')
+    .trim();
 }
-
-interface AppItem {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  icon: React.ReactNode;
-  tags: string[];
-  color: string;
-  category: 'cvat' | 'personal';
-}
-
-const apps: AppItem[] = [
-  {
-    id: "chamcong",
-    title: "Chấm Công",
-    description: "Công cụ theo dõi ngày công và quản lý thu nhập cá nhân. Giao diện đơn giản, tính toán chính xác.",
-    url: "https://ccong.vercel.app/",
-    icon: <Calculator className="w-6 h-6" />,
-    tags: ["Personal", "Finance", "Tool"],
-    color: "from-blue-500/20 to-indigo-500/20",
-    category: "personal"
-  },
-  {
-    id: "annotations",
-    title: "Annotations Counter",
-    description: "Thống kê và phân tích dữ liệu gán nhãn từ CVAT. Hỗ trợ kiểm tra lỗi duplicate và lọc label chuyên sâu.",
-    url: "https://exclude-ct.vercel.app/",
-    icon: <ImageIcon className="w-6 h-6" />,
-    tags: ["Data", "CVAT", "Stats"],
-    color: "from-purple-500/20 to-pink-500/20",
-    category: "cvat"
-  },
-  {
-    id: "imageview",
-    title: "Images Viewer",
-    description: "Trình duyệt ảnh hiệu năng cao cho bộ dữ liệu lớn. Hỗ trợ hiển thị bounding box và điều hướng thông minh.",
-    url: "https://imageview.vercel.app/",
-    icon: <LayoutDashboard className="w-6 h-6" />,
-    tags: ["Viewer", "Utility", "Quality"],
-    color: "from-emerald-500/20 to-teal-500/20",
-    category: "cvat"
-  },
-  {
-    id: "colorpicker",
-    title: "Color Picker",
-    description: "Bộ công cụ AI mạnh mẽ để lấy màu chính xác từng pixel và phân tích nhóm màu thông minh.",
-    url: "https://color-analyze.vercel.app/",
-    icon: <Pipette className="w-6 h-6" />,
-    tags: ["Windows", "AI", "Design"],
-    color: "from-pink-500/20 to-red-500/20",
-    category: "cvat"
-  },
-  {
-    id: "cvatbox",
-    title: "CVAT Box Tool",
-    description: "Công cụ phát hiện và xử lý trùng lặp bounding box (Duplicate Box) cho dữ liệu CVAT XML. Đảm bảo chất lượng dữ liệu AI.",
-    url: "https://boxct.vercel.app/",
-    icon: <Box className="w-6 h-6" />,
-    tags: ["QA", "CVAT", "Annotation"],
-    color: "from-amber-500/20 to-orange-500/20",
-    category: "cvat"
-  },
-  {
-    id: "reidauto",
-    title: "ReID_Auto",
-    description: "Công cụ Windows dùng AI Re-ID cục bộ để nhận diện nhân vật từ ảnh chụp màn hình và tự động vẽ khung đánh dấu.",
-    url: "https://github.com/NDCLI/ReID_Auto",
-    icon: <ScanSearch className="w-6 h-6" />,
-    tags: ["Windows", "Python", "Re-ID"],
-    color: "from-cyan-500/20 to-blue-500/20",
-    category: "cvat"
-  }
-];
-
-const featuredProjects = [
-  {
-    id: 'cvatbox',
-    title: 'CVAT Box Inspector',
-    eyebrow: 'Featured project',
-    description: 'Audit bounding boxes, find duplicates and inspect CVAT XML or ZIP datasets directly in your browser.',
-    image: boxSS,
-    url: 'https://boxct.vercel.app/',
-    githubUrl: 'https://github.com/NDCLI/box',
-    tags: ['React 19', 'TypeScript', 'CVAT'],
-  },
-  {
-    id: 'reidauto',
-    title: 'ReID_Auto',
-    eyebrow: 'Desktop AI utility',
-    description: 'Nhận diện nhân vật bằng AI Re-ID cục bộ và tự động vẽ khung đánh dấu trực tiếp từ ảnh chụp màn hình.',
-    image: reidAutoSS,
-    url: 'https://github.com/NDCLI/ReID_Auto',
-    tags: ['Windows', 'Python', 'OpenVINO'],
-  },
-  {
-    id: 'chamcong',
-    title: 'Chấm Công',
-    eyebrow: 'Personal finance',
-    description: 'Theo dõi ngày công, tăng ca và quản lý thu nhập cá nhân trong một giao diện gọn gàng.',
-    image: chamcongSS,
-    url: 'https://ccong.vercel.app/',
-    tags: ['Finance', 'Personal', 'Web'],
-  },
-  {
-    id: 'annotations',
-    title: 'Annotations Counter',
-    eyebrow: 'Data utility',
-    description: 'Thống kê và phân tích dữ liệu gán nhãn từ CVAT với bộ lọc chuyên sâu.',
-    image: annotationsSS,
-    url: 'https://exclude-ct.vercel.app/',
-    tags: ['CVAT', 'Data', 'Stats'],
-  },
-  {
-    id: 'imageview',
-    title: 'Images Viewer',
-    eyebrow: 'Dataset viewer',
-    description: 'Duyệt bộ ảnh lớn, hiển thị bounding box và điều hướng frame nhanh chóng.',
-    image: imageviewSS,
-    url: 'https://imageview.vercel.app/',
-    tags: ['Viewer', 'QA', 'Utility'],
-  },
-] as const;
 
 function App() {
-  const [mounted, setMounted] = useState(false);
-  const [activeFeaturedId, setActiveFeaturedId] = useState('cvatbox');
+  const [isReady, setIsReady] = useState(false);
+  const [search, setSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState<Category>('all');
+  const [selectedApp, setSelectedApp] = useState<AppItem | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setMounted(true));
+    const frame = window.requestAnimationFrame(() => setIsReady(true));
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  const cvatApps = apps.filter(app => app.category === 'cvat');
-  const personalApps = apps.filter(app => app.category === 'personal');
-  const activeFeatured = featuredProjects.find(project => project.id === activeFeaturedId) ?? featuredProjects[0];
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTyping =
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable;
+
+      if (event.key === '/' && !isTyping && !selectedApp) {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+
+      if (event.key === 'Escape' && document.activeElement === searchInputRef.current && search) {
+        setSearch('');
+      }
+    };
+
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, [search, selectedApp]);
+
+  const filteredApps = useMemo(() => {
+    const query = normalizeSearch(search);
+
+    return apps.filter((app) => {
+      if (activeCategory !== 'all' && app.category !== activeCategory) return false;
+      if (!query) return true;
+
+      return normalizeSearch(
+        [app.title, app.description, app.platform, ...app.tags].join(' '),
+      ).includes(query);
+    });
+  }, [activeCategory, search]);
+
+  const closeDetails = useCallback(() => setSelectedApp(null), []);
+  const resetFilters = useCallback(() => {
+    setSearch('');
+    setActiveCategory('all');
+    window.requestAnimationFrame(() => searchInputRef.current?.focus());
+  }, []);
+
+  const currentHeading = categoryHeadings[activeCategory];
+  const hasActiveFilter = activeCategory !== 'all' || search.trim().length > 0;
+  const showFeaturedCard = activeCategory === 'all' && search.trim().length === 0;
+  const cvatCount = apps.filter((app) => app.category === 'cvat').length;
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-200 selection:bg-blue-500/30 selection:text-blue-200 relative overflow-hidden">
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] animate-blob" />
-        <div className="absolute top-[20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/10 blur-[120px] animate-blob animation-delay-2000" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[45%] h-[45%] rounded-full bg-cyan-600/10 blur-[120px] animate-blob animation-delay-4000" />
-        <div className="absolute inset-0 bg-mesh opacity-50" />
-      </div>
+    <div className="app-background min-h-dvh overflow-x-hidden bg-[#080b12] text-slate-100 selection:bg-violet-400/30 selection:text-white">
+      <a
+        href="#apps"
+        className="pointer-events-none fixed left-4 top-3 z-[100] -translate-y-20 rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-950 opacity-0 transition-[transform,opacity] focus-visible:pointer-events-auto focus-visible:translate-y-0 focus-visible:opacity-100"
+      >
+        Bỏ qua phần giới thiệu
+      </a>
 
-      <div className="relative z-10">
-        {/* Navigation / Top Bar */}
-        <nav className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Box className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-black text-white tracking-normal italic uppercase">CVAT Utility Hub</span>
-          </div>
+      <header className="sticky top-0 z-40 border-b border-white/[0.07] bg-[#080b12]/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <a
+            href="#"
+            className="group flex items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-4 focus-visible:ring-offset-[#080b12]"
+            aria-label="App Dock — về đầu trang"
+          >
+            <span className="brand-mark flex size-10 items-center justify-center rounded-2xl border border-white/10 text-white shadow-[0_12px_30px_-12px_rgba(124,106,255,0.9)]">
+              <Box className="size-5" aria-hidden="true" />
+            </span>
+            <span>
+              <span className="block text-[15px] font-extrabold leading-none tracking-[-0.02em] text-white">
+                App Dock
+              </span>
+              <span className="mt-1 block text-[11px] font-semibold text-slate-500">NDCLI toolstack</span>
+            </span>
+          </a>
 
-          <div className="flex gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="hidden text-xs font-semibold text-slate-500 sm:inline">
+              {apps.length} công cụ đang hoạt động
+            </span>
             <a
               href="https://github.com/NDCLI"
               target="_blank"
-              className="p-2.5 rounded-full glass-card hover:bg-white/10 transition-colors"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.045] px-3.5 text-sm font-bold text-slate-200 transition-colors hover:border-white/20 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+              aria-label="Xem GitHub của NDCLI (mở trong tab mới)"
             >
-              <Github className="w-5 h-5" />
+              <Github className="size-4" aria-hidden="true" />
+              <span className="hidden sm:inline">GitHub</span>
+              <ArrowUpRight className="size-3.5 text-slate-500" aria-hidden="true" />
             </a>
           </div>
-        </nav>
+        </div>
+      </header>
 
-        {/* Hero Section */}
-        <header className="max-w-7xl mx-auto px-6 pt-12 pb-24 text-center md:text-left grid md:grid-cols-2 items-center gap-12">
-          <div className={cn("transition-all duration-1000 transform", mounted ? "translate-x-0 opacity-100" : "-translate-x-12 opacity-0")}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400">Personal Projects 2026</span>
+      <main id="main-content">
+        <section className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-12 lg:px-8 lg:pt-16" aria-labelledby="hero-title">
+          <div className="hero-panel relative isolate overflow-hidden rounded-[2rem] border border-white/[0.09] bg-[#0d121d] px-5 py-9 shadow-[0_32px_100px_-60px_rgba(70,55,255,0.8)] sm:px-10 sm:py-12 lg:px-14 lg:py-14">
+            <div className="hero-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+            <div className="hero-glow pointer-events-none absolute -right-28 -top-28 -z-10 size-80 rounded-full blur-3xl" aria-hidden="true" />
+            <div className="relative max-w-4xl">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-300/20 bg-violet-400/10 px-3 py-1.5 text-xs font-bold text-violet-200">
+                <Sparkles className="size-3.5" aria-hidden="true" />
+                Công cụ gọn nhẹ cho workflow dữ liệu
+              </div>
+
+              <h1 id="hero-title" className="max-w-4xl text-balance text-4xl font-extrabold leading-[1.04] tracking-[-0.045em] text-white sm:text-5xl lg:text-[4rem]">
+                Chọn đúng công cụ.
+                <span className="text-gradient block">Bắt đầu công việc ngay.</span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-pretty text-[15px] leading-7 text-slate-400 sm:text-lg sm:leading-8">
+                Tập hợp các tiện ích CVAT, AI và công cụ cá nhân do AI xây dựng.
+              </p>
+
+              <dl className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-400">
+                <div className="flex items-baseline gap-2">
+                  <dt className="sr-only">Tổng số công cụ</dt>
+                  <dd className="font-bold text-white">{apps.length}</dd>
+                  <span>công cụ</span>
+                </div>
+                <span className="hidden size-1 rounded-full bg-slate-700 sm:block" aria-hidden="true" />
+                <div className="flex items-baseline gap-2">
+                  <dt className="sr-only">Công cụ CVAT</dt>
+                  <dd className="font-bold text-white">{cvatCount}</dd>
+                  <span>cho CVAT</span>
+                </div>
+                <span className="hidden size-1 rounded-full bg-slate-700 sm:block" aria-hidden="true" />
+                <div className="flex items-baseline gap-2">
+                  <dt className="sr-only">Nền tảng</dt>
+                  <dd>Web &amp; Windows</dd>
+                </div>
+              </dl>
+
+              <div className="mt-9 max-w-3xl">
+                <form role="search" onSubmit={(event) => event.preventDefault()}>
+                  <label htmlFor="app-search" className="sr-only">
+                    Tìm ứng dụng theo tên, chức năng hoặc công nghệ
+                  </label>
+                  <div className="search-shell relative flex items-center rounded-2xl border border-white/[0.12] bg-[#080b12]/80 p-1.5 shadow-[0_22px_60px_-36px_rgba(0,0,0,0.95)] focus-within:border-violet-300/50 focus-within:ring-4 focus-within:ring-violet-400/10">
+                    <Search className="ml-3 size-5 shrink-0 text-slate-500" aria-hidden="true" />
+                    <input
+                      ref={searchInputRef}
+                      id="app-search"
+                      type="search"
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      placeholder="Tìm theo tên, chức năng hoặc công nghệ..."
+                      autoComplete="off"
+                      className="min-h-12 min-w-0 flex-1 bg-transparent px-3 text-[15px] font-medium text-white outline-none placeholder:text-slate-500 sm:text-base [&::-webkit-search-cancel-button]:hidden"
+                    />
+                    {search ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearch('');
+                          searchInputRef.current?.focus();
+                        }}
+                        className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+                        aria-label="Xóa nội dung tìm kiếm"
+                      >
+                        <X className="size-4" aria-hidden="true" />
+                      </button>
+                    ) : (
+                      <kbd className="mr-2 hidden rounded-lg border border-white/10 bg-white/[0.05] px-2 py-1 text-xs font-bold text-slate-500 sm:block">
+                        /
+                      </kbd>
+                    )}
+                  </div>
+                </form>
+
+                <nav className="scrollbar-hide mt-4 flex gap-2 overflow-x-auto pb-1" aria-label="Lọc ứng dụng theo danh mục">
+                  {categories.map(({ key, label, shortLabel, Icon }) => {
+                    const count = key === 'all' ? apps.length : apps.filter((app) => app.category === key).length;
+                    const isActive = activeCategory === key;
+
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setActiveCategory(key)}
+                        aria-pressed={isActive}
+                        className={cn(
+                          'inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border px-3.5 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300',
+                          isActive
+                            ? 'border-violet-300/30 bg-violet-400/15 text-violet-100'
+                            : 'border-white/[0.08] bg-white/[0.035] text-slate-400 hover:border-white/[0.14] hover:bg-white/[0.065] hover:text-white',
+                        )}
+                        aria-label={`${label}, ${count} ứng dụng`}
+                      >
+                        <Icon className="size-4" aria-hidden="true" />
+                        <span className="sm:hidden">{shortLabel}</span>
+                        <span className="hidden sm:inline">{label}</span>
+                        <span className={cn('rounded-md px-1.5 py-0.5 text-[11px]', isActive ? 'bg-violet-200/10 text-violet-100' : 'bg-white/[0.05] text-slate-500')}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
             </div>
-            <h1 className="text-6xl lg:text-8xl font-black tracking-tight text-white leading-none mb-8">
-              Creative <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">Workspace.</span>
-            </h1>
-            <p className="text-xl text-slate-400 max-w-lg mb-10 leading-relaxed font-medium">
-              Tổng hợp các công cụ xây dựng để tối ưu hóa công việc và theo dõi dữ liệu hàng ngày.
+          </div>
+        </section>
+
+        <section id="apps" tabIndex={-1} className="mx-auto max-w-7xl scroll-mt-24 px-4 pb-20 outline-none sm:px-6 lg:px-8 lg:pb-28" aria-labelledby="apps-heading">
+          <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.16em] text-violet-300">Khám phá</p>
+              <h2 id="apps-heading" className="text-2xl font-extrabold tracking-[-0.03em] text-white sm:text-3xl">
+                {currentHeading.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">{currentHeading.description}</p>
+            </div>
+            <p className="text-sm font-semibold text-slate-400" aria-live="polite" aria-atomic="true">
+              {filteredApps.length} kết quả
+              {search.trim() ? ` cho “${search.trim()}”` : ''}
             </p>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl glass-card text-sm font-semibold border-blue-500/20">
-                <Monitor className="w-4 h-4 text-blue-400" /> Web Optimized
-              </div>
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl glass-card text-sm font-semibold border-purple-500/20">
-                <Cpu className="w-4 h-4 text-purple-400" /> AI Powered
-              </div>
+          </div>
+
+          {filteredApps.length > 0 ? (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
+              {filteredApps.map((app, index) => (
+                <AppCard
+                  key={app.id}
+                  app={app}
+                  index={index}
+                  isReady={isReady}
+                  isFeatured={showFeaturedCard && index === 0}
+                  onSelect={setSelectedApp}
+                />
+              ))}
             </div>
-          </div>
-
-          <div className={cn("hidden md:block transition-all duration-1000 delay-300 transform", mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0")}>
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-700" />
-              <div className="hidden lg:block relative">
-                <div className="glass-card p-2 rounded-[2.5rem] aspect-[16/10] relative overflow-hidden group border-white/10 shadow-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  
-                  {/* Browser Window UI */}
-                  <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden bg-[#020617] border border-white/5 flex flex-col">
-                    <div className="h-8 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
-                      <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
-                      </div>
-                      <div className="mx-auto w-48 h-4 bg-white/5 rounded-full" />
-                    </div>
-                    <div className="flex-1 overflow-hidden relative bg-[#020617]">
-                      <img
-                        key={activeFeatured.id}
-                        src={activeFeatured.image}
-                        alt={`${activeFeatured.title} preview`}
-                        className="absolute inset-0 w-full h-full object-cover animate-featured-in"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/70 to-transparent" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-[#020617]/10" />
-
-                      <div className="absolute inset-x-0 top-0 p-7 max-w-[68%]">
-                        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-cyan-400/20 bg-cyan-400/10 text-[8px] font-black uppercase tracking-[0.18em] text-cyan-300 mb-3">
-                          <Sparkles className="w-2.5 h-2.5" />
-                          {activeFeatured.eyebrow}
-                        </div>
-                        <h3 className="text-xl font-black text-white tracking-tight mb-2">{activeFeatured.title}</h3>
-                        <p className="text-[9px] leading-relaxed text-slate-300 line-clamp-3 mb-3">{activeFeatured.description}</p>
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {activeFeatured.tags.map(tag => (
-                            <span key={tag} className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[7px] font-bold text-slate-300">{tag}</span>
-                          ))}
-                        </div>
-                        <div className="flex gap-2">
-                          <a href={activeFeatured.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#020617] text-[8px] font-black hover:bg-cyan-100 transition-colors">
-                            {activeFeatured.id === 'reidauto' ? 'View GitHub' : 'Live demo'} <ExternalLink className="w-2.5 h-2.5" />
-                          </a>
-                          {'githubUrl' in activeFeatured && activeFeatured.githubUrl && (
-                            <a href={activeFeatured.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-[8px] font-black hover:bg-white/10 transition-colors">
-                              <Github className="w-2.5 h-2.5" /> Source
-                            </a>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="absolute inset-x-4 bottom-3 grid grid-cols-5 gap-1.5">
-                        {featuredProjects.map(project => (
-                          <button
-                            key={project.id}
-                            type="button"
-                            onClick={() => setActiveFeaturedId(project.id)}
-                            aria-label={`Show ${project.title}`}
-                            className={cn(
-                              "group/tab min-w-0 rounded-lg border px-2 py-2 text-left backdrop-blur-md transition-all",
-                              project.id === activeFeatured.id
-                                ? "bg-white/15 border-cyan-300/40 shadow-lg shadow-cyan-500/10"
-                                : "bg-[#020617]/65 border-white/10 hover:bg-white/10"
-                            )}
-                          >
-                            <span className={cn("block truncate text-[7px] font-black", project.id === activeFeatured.id ? "text-white" : "text-slate-400 group-hover/tab:text-white")}>{project.title}</span>
-                            <span className={cn("mt-1 block h-0.5 rounded-full transition-all", project.id === activeFeatured.id ? "w-full bg-cyan-400" : "w-3 bg-white/15")}/>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Decoration */}
-                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none" />
-                  <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Apps Section */}
-        <section id="apps-grid" className="max-w-7xl mx-auto px-6 pb-24">
-          {/* CVAT Utilities Group */}
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">CVAT Utilities</h2>
-              <div className="h-1 w-12 bg-blue-500 rounded-full" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-            {cvatApps.map((app, index) => (
-              <div
-                key={app.id}
-                onClick={() => window.open(app.url, '_blank')}
-                className={cn(
-                  "glass-card p-6 rounded-[2rem] flex flex-col glass-card-hover group relative overflow-hidden transition-all duration-700 cursor-pointer",
-                  mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
-                )}
-                style={{ transitionDelay: `${index * 150}ms` }}
-              >
-                <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", app.color)} />
-
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-8">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-300">
-                      {app.icon}
-                    </div>
-                    <div className="flex gap-2">
-                      <a
-                        href={`#guide-${app.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-blue-500/20 hover:border-blue-500/40"
-                        title="Xem hướng dẫn"
-                      >
-                        <Sparkles className="w-4 h-4 text-blue-400" />
-                      </a>
-                      <div
-                        className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-white/10"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-                    {app.title}
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-8 leading-relaxed line-clamp-3">
-                    {app.description}
-                  </p>
-
-                  <div className="mt-auto flex flex-wrap gap-2">
-                    {app.tags.map(tag => (
-                      <span key={tag} className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Personal Utilities Group */}
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Personal Utilities</h2>
-              <div className="h-1 w-12 bg-purple-500 rounded-full" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {personalApps.map((app, index) => (
-              <div
-                key={app.id}
-                onClick={() => window.open(app.url, '_blank')}
-                className={cn(
-                  "glass-card p-6 rounded-[2rem] flex flex-col glass-card-hover group relative overflow-hidden transition-all duration-700 cursor-pointer",
-                  mounted ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
-                )}
-                style={{ transitionDelay: `${index * 150}ms` }}
-              >
-                <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", app.color)} />
-
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-8">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/10 transition-all duration-300">
-                      {app.icon}
-                    </div>
-                    <div className="flex gap-2">
-                      <a
-                        href={`#guide-${app.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-blue-500/20 hover:border-blue-500/40"
-                        title="Xem hướng dẫn"
-                      >
-                        <Sparkles className="w-4 h-4 text-blue-400" />
-                      </a>
-                      <div
-                        className="p-2 rounded-full bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-white/10"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-                    {app.title}
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-8 leading-relaxed line-clamp-3">
-                    {app.description}
-                  </p>
-
-                  <div className="mt-auto flex flex-wrap gap-2">
-                    {app.tags.map(tag => (
-                      <span key={tag} className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Guide Section */}
-        <section className="max-w-7xl mx-auto px-6 pb-32">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-white mb-2">Usage Guide</h2>
-            <div className="h-1 w-12 bg-purple-500 rounded-full" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {apps.map((app) => (
-              <div
-                key={app.id}
-                id={`guide-${app.id}`}
-                className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-purple-500/30 transition-colors"
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-purple-400">
-                    {app.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-white">{app.title}</h3>
-                </div>
-
-                <ul className="space-y-4">
-                  {[
-                    app.title === "Chấm Công" && "Nhập Lương cơ bản (LCB) và số người phụ thuộc (NPT) ở thanh công cụ phía trên.",
-                    app.title === "Chấm Công" && "Điền số giờ tăng ca vào các cột tương ứng: 150%, 200%, 300% tùy theo ngày làm việc.",
-                    app.title === "Chấm Công" && "Sử dụng tính năng Đồng bộ Cloud với mã bí mật để lưu trữ và xem dữ liệu trên nhiều thiết bị.",
-                    app.title === "Chấm Công" && "Tùy chỉnh các mức đóng bảo hiểm và trợ cấp trong phần Cài đặt (⚙️).",
-
-                    app.title === "Annotations Counter" && "Tải lên file .xml hoặc .zip chứa annotations được xuất bản trực tiếp từ CVAT.",
-                    app.title === "Annotations Counter" && "Nhập khoảng Frame (Start/End) nếu chỉ muốn thống kê một đoạn video hoặc chuỗi ảnh cụ thể.",
-                    app.title === "Annotations Counter" && "Thêm nhãn vào danh sách Exclude Labels để loại bỏ các nhãn rác khỏi thống kê chính.",
-                    app.title === "Annotations Counter" && "Kiểm tra các lỗi Duplicate (đối tượng trùng khít 100%) để đảm bảo chất lượng dữ liệu.",
-
-                    app.title === "Images Viewer" && "Tải dữ liệu bằng cách chọn thư mục (Folder) hoặc tải lên file ZIP chứa ảnh.",
-                    app.title === "Images Viewer" && "Sử dụng phím Mũi tên Phải/F để tới ảnh tiếp theo, Mũi tên Trái/D để quay lại.",
-                    app.title === "Images Viewer" && "Nhấn Ctrl + F để tìm kiếm nhanh ảnh theo ID frame hoặc tên file cực kỳ tiện lợi.",
-                    app.title === "Images Viewer" && "Bật/tắt Show Boxes để hiển thị khung bao từ file XML annotations đi kèm.",
-
-                    app.title === "Color Picker" && "Sử dụng phím Alt + S để mở kính lúp và chọn mã màu chính xác từ màn hình.",
-                    app.title === "Color Picker" && "Nhấn Alt + A để vẽ vùng chọn Lasso hoặc Ctrl + V để phân tích màu từ Clipboard.",
-                    app.title === "Color Picker" && "Công nghệ AI Ensemble Voting giúp định danh tên màu chính xác với 6 thuật toán lõi.",
-
-                    app.title === "CVAT Box Tool" && "Tải lên file XML chứa annotations xuất từ CVAT để bắt đầu phân tích.",
-                    app.title === "CVAT Box Tool" && "Hệ thống tự động quét và hiển thị danh sách các bounding box bị trùng lặp (duplicate).",
-                    app.title === "CVAT Box Tool" && "Xem trực quan thông tin chi tiết của box trùng lặp: ID đối tượng, tọa độ và Frame tương ứng.",
-                    app.title === "CVAT Box Tool" && "Tải xuống file XML sạch đã được loại bỏ tự động các box bị trùng lặp.",
-
-                    app.title === "ReID_Auto" && "Cài đặt ứng dụng trên Windows và chuẩn bị các thư mục ảnh mẫu trong thư mục queries.",
-                    app.title === "ReID_Auto" && "Chọn nhóm nhân vật cần tìm hoặc dùng chế độ tự động phân loại ảnh mẫu từ Clipboard.",
-                    app.title === "ReID_Auto" && "Chụp giao diện Re-ID bằng Snipping Tool hoặc ShareX để AI tự động nhận diện và vẽ khung.",
-                    app.title === "ReID_Auto" && "Dùng cửa sổ Batch Review để xóa khung sai, bổ sung khung thiếu và lưu kết quả.",
-
-                    "Truy cập ứng dụng ngay để trải nghiệm đầy đủ các tính năng chuyên sâu."
-                  ].filter(Boolean).map((step, i) => (
-                    <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed">
-                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-[10px] font-bold border border-purple-500/20">
-                        {i + 1}
-                      </span>
-                      {step}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="border-t border-white/5 py-24 px-6 relative overflow-hidden">
-          <div className="max-w-7xl mx-auto relative z-10">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold text-white mb-4">Let's Build Something Great.</h3>
-                <p className="text-slate-500 max-w-sm mx-auto md:mx-0">
-                  Cảm ơn bạn đã ghé thăm hub ứng dụng.
-                </p>
-              </div>
-              <div className="flex justify-center md:justify-end">
-                <a
-                  href="https://github.com/NDCLI"
-                  target="_blank"
-                  className="flex items-center gap-4 px-8 py-4 rounded-[2rem] glass-card glass-card-hover group"
+          ) : (
+            <div className="flex min-h-80 flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-white/[0.12] bg-white/[0.025] px-6 text-center">
+              <span className="mb-5 flex size-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.045] text-slate-400">
+                <Search className="size-6" aria-hidden="true" />
+              </span>
+              <h3 className="text-xl font-bold text-white">Chưa tìm thấy công cụ phù hợp</h3>
+              <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">
+                Hãy thử một từ khóa ngắn hơn hoặc quay lại danh sách đầy đủ.
+              </p>
+              {hasActiveFilter && (
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-5 text-sm font-bold text-slate-950 transition-colors hover:bg-violet-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-4 focus-visible:ring-offset-[#080b12]"
                 >
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                    <Github className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Developer Profile</div>
-                    <div className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">@NDCLI</div>
-                  </div>
-                </a>
-              </div>
+                  Xóa bộ lọc
+                </button>
+              )}
             </div>
-            <div className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-600 text-xs font-bold tracking-widest uppercase">
-              <span>&copy; 2026 EXCL HUB STUDIO</span>
-              <span>Built with React & Tailwind 4</span>
-            </div>
+          )}
+        </section>
+      </main>
+
+      <footer className="border-t border-white/[0.07]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <div>
+            <p className="font-bold text-slate-300">App Dock</p>
+            <p className="mt-1">Một nơi cho những công cụ NDCLI sử dụng mỗi ngày.</p>
           </div>
-        </footer>
-      </div>
+          <p>© 2026 NDCLI · React &amp; Tailwind CSS</p>
+        </div>
+      </footer>
+
+      {selectedApp && <DetailPanel app={selectedApp} onClose={closeDetails} />}
     </div>
   );
 }

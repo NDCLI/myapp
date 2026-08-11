@@ -1,19 +1,25 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import posthog from 'posthog-js'
-import { PostHogProvider } from 'posthog-js/react'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+import posthog from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
 
-posthog.init('phc_qspiCxaSsvbdvfV74uZfs6Gc8hQN5wiX6g6cvufeN7p8', {
-  api_host: 'https://us.i.posthog.com',
-  person_profiles: 'identified_only',
-})
+const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
+
+if (posthogKey) {
+  posthog.init(posthogKey, {
+    api_host: import.meta.env.VITE_POSTHOG_HOST ?? 'https://us.i.posthog.com',
+    person_profiles: 'identified_only',
+  });
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <PostHogProvider client={posthog}>
+    {posthogKey ? (
+      <PostHogProvider client={posthog}><App /></PostHogProvider>
+    ) : (
       <App />
-    </PostHogProvider>
+    )}
   </React.StrictMode>,
 )
