@@ -1,0 +1,1 @@
+fetch('https://cvattool.vercel.app/').then(r => r.text()).then(html => { const match = html.match(/src="(\/assets\/index-[^"]+\.js)"/); if(match) { fetch('https://cvattool.vercel.app' + match[1]).then(r=>r.text()).then(js => console.log('Contains token?', js.includes('phc_qspicXaSsvbdvfV74uZfS6Gc8hQN5wiX6g6cvufeN7p8'))) } else { console.log('No js match'); } })
